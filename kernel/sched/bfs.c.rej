@@ -1,0 +1,22 @@
+--- kernel/sched/bfs.c	2013-01-29 01:21:39.948486112 +1100
++++ kernel/sched/bfs.c	2013-01-29 01:25:23.383692787 +1100
+@@ -7163,6 +7158,8 @@
+ 	 */
+ 	for_each_online_cpu(cpu) {
+ 		struct rq *rq = cpu_rq(cpu);
++
++		mutex_lock(&sched_domains_mutex);
+ 		for_each_domain(cpu, sd) {
+ 			int locality, other_cpu;
+ 
+@@ -7192,8 +7189,9 @@
+ 					rq->cpu_locality[other_cpu] = locality;
+ 			}
+ 		}
++		mutex_unlock(&sched_domains_mutex);
+ 
+-/*
++		/*
+ 		 * Each runqueue has its own function in case it doesn't have
+ 		 * siblings of its own allowing mixed topologies.
+ 		 */
